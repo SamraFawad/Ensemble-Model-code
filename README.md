@@ -26,11 +26,11 @@ pip (Python's package installer)
 Dependencies
 
 Create a virtual environment (optional but recommended):
-python -m venv venv
-source venv/bin/activate   # On Windows, use `venv\Scripts\activate`
+	python -m venv venv
+	source venv/bin/activate   # On Windows, use `venv\Scripts\activate`
 
 Install required libraries:
-pip install -r requirements.txt
+	pip install -r requirements.txt
 The requirements.txt should include the following dependencies:
 shell
 Copy code
@@ -48,14 +48,14 @@ Ensure you have access to a medical dataset for gastrointestinal tract diseases 
 Usage:
 Running the Ensemble Model
 Clone the repository:
-git clone https://github.com/yourusername/gastrointestinal-disease-ensemble.git
-cd gastrointestinal-disease-ensemble
+	git clone https://github.com/yourusername/gastrointestinal-disease-ensemble.git
+	cd gastrointestinal-disease-ensemble
 
 Train the model:
 
 You can train the ensemble model. The training script uses both NASNet Mobile and EfficientNet models for the ensemble approach:
 
-python Ensem.py
+	python Ensem.py
 This will start the training process, and the model will be compiled alongwith training data. After training, you can evaluate the model by using the same code.
 
 Model Architecture:
