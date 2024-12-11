@@ -1,4 +1,4 @@
-												Ensemble Model for Gastrointestinal Tract Disease Classification
+Ensemble Model for Gastrointestinal Tract Disease Classification
 This Python project implements an ensemble-based deep learning model combining NASNet Mobile and EfficientNet architectures for the classification of gastrointestinal tract diseases. The model uses transfer learning and fine-tuning techniques to improve performance on medical image datasets.
 
 Table of Contents
@@ -21,9 +21,9 @@ Key features of the model:
 
 Installation Prerequisites
 Make sure you have the following installed:
-Python 3.x
-pip (Python's package installer)
-Dependencies
+	Python 3.x
+	pip (Python's package installer)
+	Dependencies
 
 Create a virtual environment (optional but recommended):
 	python -m venv venv
@@ -86,10 +86,13 @@ Contributing
 Contributions are welcome! If you'd like to improve or add features to this project, please follow these steps:
 
 Fork the repository
-Create a new branch (git checkout -b feature-name)
+Create a new branch 
+	(git checkout -b feature-name)
 Make your changes
-Commit your changes (git commit -am 'Add new feature')
-Push to the branch (git push origin feature-name)
+Commit your changes 
+	(git commit -am 'Add new feature')
+Push to the branch 
+	(git push origin feature-name)
 Create a pull request
 Please make sure to follow proper coding conventions and add relevant tests for your changes.
 
