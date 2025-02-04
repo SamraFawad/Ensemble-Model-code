@@ -21,21 +21,28 @@ from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 # Load and preprocess the Kvasir dataset
-datagen = ImageDataGenerator(
-    rescale=1.0/255.0,
-    validation_split=0.2,
+# Data augmentation for training images
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True
 )
 
+# Data preprocessing for test images (no augmentation)
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+
 batch_size = 16
-train_generator = datagen.flow_from_directory(
-    '/content/drive/MyDrive/Colab Notebooks/kvasir-dataset',
+train_generator = train_datagen.flow_from_directory(
+    '/content/drive/MyDrive/Colab Notebooks/hyper-kvasir',
     target_size=(224, 224),
     batch_size=batch_size,
     class_mode='categorical',
     subset='training',
 )
 
-val_generator = datagen.flow_from_directory(
+val_generator = test_datagen.flow_from_directory(
     '/content/drive/MyDrive/Colab Notebooks/kvasir-dataset',
     target_size=(224, 224),
     batch_size=batch_size,
@@ -43,8 +50,8 @@ val_generator = datagen.flow_from_directory(
     subset='validation',
 )
 
-# Define the directory where your Kvasir v2 dataset is located
-dataset_dir = '/content/drive/MyDrive/Colab Notebooks/kvasir-dataset'
+# Define the directory where your hyper Kvasir dataset is located
+dataset_dir = '/content/drive/MyDrive/Colab Notebooks/hyper-kvasir'
 
 # Define the list of class labels based on your dataset
 class_labels = sorted(os.listdir(dataset_dir))
@@ -70,11 +77,8 @@ for label in class_labels:
 X = np.array(images)
 y = to_categorical(labels, num_classes=len(class_labels))
 
-# Split the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
 # Optionally, you can use data augmentation to further preprocess your training data
-datagen = ImageDataGenerator(
+train_datagen = ImageDataGenerator(
     rotation_range=20,
     width_shift_range=0.2,
     height_shift_range=0.2,
@@ -85,11 +89,11 @@ datagen = ImageDataGenerator(
 )
 
 # Fit the data augmentation generator on your training data
-datagen.fit(X_train)
+train_datagen.fit(train_generator)
 
 # Apply data augmentation during training
 batch_size = 16
-train_generator = datagen.flow(X_train, y_train, batch_size=batch_size)
+train_generator = train_datagen.flow(train_generator, train_generator, batch_size=batch_size)
 
 # Define the path to your KVASIR v2 dataset directory
 dataset_dir = "/content/drive/MyDrive/Colab Notebooks/kvasir-dataset"
@@ -119,11 +123,6 @@ for label in class_labels:
 
 label_encoder = LabelEncoder()
 encoded_labels = label_encoder.fit_transform(labels)
-
-X_train, X_test, y_train, y_test = train_test_split(images, encoded_labels, test_size=0.2, random_state=42)
-
-# Split the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(images, encoded_labels, test_size=0.2, random_state=42)
 
 # Define the NASNet Mobile model
 nasnet_input = Input(shape=(224, 224, 3))
@@ -173,8 +172,8 @@ ensemble_model_with_uncertainty.compile(optimizer='adam', loss='sparse_categoric
 
 
 # Train the ensemble model
-ensemble_model_with_uncertainty.fit([np.array(X_train), np.array(X_train)], np.array(y_train), epochs=30, batch_size=32, validation_split=0.2)
+ensemble_model_with_uncertainty.fit([np.array(train_generator), np.array(train_generator)], np.array(val_generator), epochs=30, batch_size=32)
 
 # Evaluate the ensemble model on the test set
-test_loss, test_accuracy = ensemble_model_with_uncertainty.evaluate([np.array(X_test), np.array(X_test)], np.array(y_test))
+test_loss, test_accuracy = ensemble_model_with_uncertainty.evaluate([np.array(val_generator), np.array(val_generator)], np.array(val_generator))
 
